@@ -1,77 +1,109 @@
-<p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
+# Laravel
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+Laravel6.x（LTS）を動かしてみるサンプル
 
-## About Laravel
+## ミドルウエアとフレームワーク
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+下記で動作確認を行っています
+- php
+ -- 7.4
+ -- Laravel 6.x
+  --- 6が現時点でLTS（202003時点では7がリリースされた）
+  --- https://readouble.com/laravel/ でリリースバージョン確認できる
+- nginx
+ -- 1.16
+- mysql
+ -- 8.0
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## インストール関連
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+gitをcloneした後に必要なライブラリ群を取得する
+```
+composer install
+※composer.jsonやcomposer.lockファイルを参照して、記載されているライブラリや特定バージョンで取得する
+```
 
-## Learning Laravel
+ex）構築時の初回インストールは下記で対応している
+```
+composer create-project laravel/laravel laravel --prefer-dist "6.*"
+※packageのURL（https://repo.packagist.org/packages.json）がリンク切れでインストールできない場合があるのでその場合は下記を実行する
+composer config -g repos.packagist composer https://packagist.jp
+```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## ディレクトリ構造（簡略版）
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```
+laravel
+├── app
+│   ├── Console // バッチ
+│   ├── Http
+│   │   ├── Controllers // コントローラ(web)
+│   │   │   └── Api // コントローラ(api)
+│   │   └── Requests // バリデーション
+│   ├── Services // ビジネスロジック
+│   ├── Repositories // モデルへのCRUD操作
+│   ├── Providers // プロバイダ設定（Repositoriesのbind）
+│   └── Models // モデル（テーブルと1:1になるように作成）
+├── config // 定数など
+├── resources // ビュー関連
+├── routes // ルーティング設定
+├── storage // ログなど環境変数（一部Git管理していません）
+├── tests // テスト関連
+└── .env // 環境変数（Git管理していません）
+```
 
-## Laravel Sponsors
+## 処理の流れ
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+- オニオンアーキテクチャの思想を実現できるように構成している（つもり）
+ -- httpリクエスト → Requests（バリデーション） → Controllers → Services → Repositories → Models → DB（データストア）
+ -- クリーンアーキテクチャに最終的にはしたい
+- 参考URL
+ -- https://qiita.com/little_hand_s/items/ebb4284afeea0e8cc752
+ -- https://qiita.com/little_hand_s/items/2040fba15d90b93fc124
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
-- [We Are The Robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
-- [Abdel Elrafa](https://abdelelrafa.com)
-- [Hyper Host](https://hyper.host)
-- [Appoly](https://www.appoly.co.uk)
-- [OP.GG](https://op.gg)
+## サンプル
 
-## Contributing
+- 下記のサイトを参考に最低限のTODOリストを作成（一覧・作成・編集）
+ -- https://www.hypertextcandy.com/laravel-tutorial-introduction/
+ -- DBとwebサーバを用意すれば動きます
+ --- https://github.com/hszk/docker-php-nginx-mysql-pma と合わせれば一応動く
+- テーブル情報は下記
+ -- マイグレーション
+  --- database/migrations/2020_03_11_034529_create_tasks_table.php
+ -- シード（サンプルデータ）
+  --- database/seeds/TasksTableSeeder.php
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## コーディング
 
-## Code of Conduct
+- 全体的に
+ -- ディレクトリ構造（簡略版）に記載した処理の基本的な流れは守るようにコーディングをする
+ --- ex）ControllersからRepositoriesのメソッドを呼び出すことはしない
+ --- ↑似たような処理でも必ずServicesを通す（将来的にビジネスロジックが入った時に対応が面倒になるので）
+ -- 環境変数はconfigを経由して呼び出すようにする
+- Repositories
+ -- ModelsへのアクセスはEloquentを使用する
+ --- https://readouble.com/laravel/6.x/ja/eloquent.html
+ --- 使い方はネットで確認（たくさん情報はあるはず）
+ --- テーブルの指定で「DB::table('テーブル名')」という指定はしないこと（クエリビルダになるので）
+- Models
+ -- 定数値でDBの値に関連するものはModelsで定義をする
+ --- app/Models/Task.phpのconstを確認
+ --- statusを文字列に変換する場合はAttributeを使用する
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## エラー監視
 
-## Security Vulnerabilities
+- sentryを導入
+ -- https://sentry.io/welcome/
+ -- https://qiita.com/megane42/items/8e68ee40b1d9a360a5b9
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+ライブラリのインストールは下記で対応する
+```
+composer require sentry/sentry-laravel
+※packageのURL（https://repo.packagist.org/packages.json）がリンク切れでインストールできない場合があるのでその場合は下記を実行する
+composer config -g repos.packagist composer https://packagist.jp
+sentryにアカウントを作成してプロジェクトを作成したときに出てくる設定を行う
+.envにSENTRY_LARAVEL_DSNを設定すれば動く
+```
 
 ## License
 
