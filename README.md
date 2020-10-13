@@ -54,9 +54,9 @@ laravel
 
 ## 処理の流れ
 
-- オニオンアーキテクチャの思想を実現できるように構成している（つもり）
+- オニオンアーキテクチャの思想を実現できるように構成しているが、現状はレイヤーで整理ができている段階
   - httpリクエスト → Requests（バリデーション） → Controllers → Services → Repositories → Models → DB（データストア）
-  - クリーンアーキテクチャに最終的にはしたい
+  - ドメイン層の部分でEntityとValueObjectを使ってデータの同一性、同属性を担保するところが抜けている
 - 参考URL
   - https://qiita.com/little_hand_s/items/ebb4284afeea0e8cc752
   - https://qiita.com/little_hand_s/items/2040fba15d90b93fc124
